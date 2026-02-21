@@ -1,0 +1,154 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rental Prices in Lisbon</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        h2 {
+            text-align: center;
+            color: #0066cc;
+            margin-top: 30px;
+        }
+        form {
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="submit"], input[type="button"] {
+            background-color: #0066cc;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover, input[type="button"]:hover {
+            background-color: #0056a3;
+        }
+        input[type="number"], select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        fieldset {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        legend {
+            font-size: 16px;
+            color: #333;
+			font-weight: bold;
+        }
+        .result {
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Display the prediction result -->
+    {% if final_prediction %}
+    <div id="resultado" class="result">
+        <h3 style="color: #ff6600;">Estimated rental price:</h3>
+        <p style="font-size: 20px; text-align: center; margin-top: 10px;">Based on the entered data, the expected rental price is <span style="font-size: 28px;">{{ final_prediction }}€</span></p>
+    </div>
+    {% endif %}
+    <h2>Rental Prices in Lisbon</h2>
+    <form action="/predict" method="post">
+        <label for="municipality">District:</label>
+        <select id="municipality" name="municipality">
+            <option value="" selected disabled hidden>Select a district</option>
+            <option value="Ajuda">Ajuda</option>
+            <option value="Alcântara">Alcântara</option>
+            <option value="Alvalade">Alvalade</option>
+            <option value="Areeiro">Areeiro</option>
+            <option value="Arroios">Arroios</option>
+            <option value="Avenidas Novas">Avenidas Novas</option>
+            <option value="Beato">Beato</option>
+            <option value="Belém">Belém</option>
+            <option value="Benfica">Benfica</option>
+            <option value="Campo de Ourique">Campo de Ourique</option>
+            <option value="Campolide">Campolide</option>
+            <option value="Carnide">Carnide</option>
+            <option value="Estrela">Estrela</option>
+            <option value="Lumiar">Lumiar</option>
+            <option value="Marvila">Marvila</option>
+            <option value="Misericórdia">Misericórdia</option>
+            <option value="Olivais">Olivais</option>
+            <option value="Parque das Nações">Parque das Nações</option>
+            <option value="Penha de França">Penha de França</option>
+            <option value="Santa Clara">Santa Clara</option>
+            <option value="Santa Maria Maior">Santa Maria Maior</option>
+            <option value="Santo António">Santo António</option>
+            <option value="São Domingos de Benfica">São Domingos de Benfica</option>
+            <option value="São Vicente">São Vicente</option>
+        </select><br><br>
+
+        <label for="propertyType">Property Type:</label>
+        <select id="propertyType" name="propertyType">
+            <option value="" selected disabled hidden>Select a property type</option>
+            <option value="flat">Apartment</option>
+            <option value="studio">Studio</option>
+            <option value="duplex">Duplex</option>
+            <option value="penthouse">Penthouse</option>
+            <option value="chalet">House</option>
+        </select><br><br>
+        
+        <label for="size">Area (m2):</label>
+        <input type="number" id="size" name="size" step="1" min="1" required ><br><br>
+        
+        <label for="rooms">Rooms (enter 1 for studio):</label>
+        <input type="number" id="rooms" name="rooms" min="1" required><br><br>
+
+        <label for="bathrooms">Bathrooms:</label>
+        <input type="number" id="bathrooms" name="bathrooms" min="1" required><br><br>
+
+        <fieldset>
+			<legend style="font-size: 16px;">Features:</legend>
+			<label for="hasFurniture" style="font-size: 14px; font-weight: normal;">Furnished:</label>
+			<input type="checkbox" id="hasFurniture" name="hasFurniture"><br><br>
+
+			<label for="hasBalcony" style="font-size: 14px; font-weight: normal;">Balcony:</label>
+			<input type="checkbox" id="hasBalcony" name="hasBalcony"><br><br>
+
+			<label for="hasMetro" style="font-size: 14px; font-weight: normal;">Metro Station (within 500m):</label>
+			<input type="checkbox" id="hasMetro" name="hasMetro"><br><br>
+
+			<label for="hasLift" style="font-size: 14px; font-weight: normal;">Elevator:</label>
+			<input type="checkbox" id="hasLift" name="hasLift"><br><br>
+
+			<label for="hasGarage" style="font-size: 14px; font-weight: normal;">Garage:</label>
+			<input type="checkbox" id="hasGarage" name="hasGarage"><br><br>
+
+			<label for="isLuxury" style="font-size: 14px; font-weight: normal;">Luxury Property:</label>
+			<input type="checkbox" id="isLuxury" name="isLuxury"><br><br>
+		</fieldset>
+
+     
+
+        <input type="submit" value="Get price">
+    </form>
+</body>
+</html>
